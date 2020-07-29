@@ -110,8 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    final appBar=AppBar(
         title: Text('Expense Tracker'),
         actions: <Widget>[
           IconButton(
@@ -119,14 +118,24 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => _startModalBottomSheet(context),
           ),
         ],
-      ),
+    );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Chart(_recentTransactions),
-            Transactionist(_userTransaction,_deleteTransaction)
+            Container(
+              height: (MediaQuery.of(context).size.height-
+              appBar.preferredSize.height-
+              MediaQuery.of(context).padding.top)*0.3,
+              child: Chart(_recentTransactions)),
+            Container(
+              height: (MediaQuery.of(context).size.height-
+              appBar.preferredSize.height-
+              MediaQuery.of(context).padding.top)*0.7,
+              child: Transactionist(_userTransaction,_deleteTransaction))
           ],
         ),
       ),
