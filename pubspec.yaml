@@ -20,6 +20,16 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.16.1
+  
+  numeric_keyboard: ^1.0.0
+
+  firebase_core: ^0.4.4+3
+  firebase_auth: ^0.15.5+3
+
+  mobx: ^1.1.1
+  flutter_mobx: ^1.1.0
+  provider: ^4.0.4
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -29,6 +39,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.7.5
+  build_runner: ^1.8.1
+  mobx_codegen: ^1.0.3
 
 flutter_icons:
   image_path: "assets/icons/expense_ico.png"

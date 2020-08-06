@@ -1,3 +1,4 @@
+import 'package:expense_tracker/pages/splash_page.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
 
 import './models/transaction.dart';
@@ -18,67 +19,51 @@ class MyApp extends StatelessWidget {
         errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-            headline6:TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+              headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              button: TextStyle(
+                color: Colors.white,
+              ),
             ),
-            button: TextStyle(
-              color: Colors.white,
-            ),
-          ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-            headline6:TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-            button: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          ),
+                headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                button: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+        ),
       ),
-      home: MyHomePage(),
+      home: SplashPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  // String titleInput;
-  // String amountInput;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransaction = [
-    // Transaction(
-    //   id: 't1', 
-    //   title: 'Shoes', 
-    //   amount: 45.6, 
-    //   date: DateTime.now()
-    //   ),
-    // Transaction(
-    //     id: 't2', 
-    //     title: 'Groceries', 
-    //     amount: 78.5, 
-    //     date: DateTime.now()
-    //     )
-  ];
-  
-  List<Transaction> get _recentTransactions{
-    return _userTransaction.where((tx){
-      return tx.date.isAfter(
-        DateTime.now().subtract(
-          Duration(days: 7),
-          )
-        );
+  final List<Transaction> _userTransaction = [];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransaction.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount,DateTime chosenDate) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
@@ -89,14 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
       _userTransaction.add(newTx);
     });
   }
-  void _deleteTransaction(String id){
+
+  void _deleteTransaction(String id) {
     setState(() {
-      _userTransaction.removeWhere((tx){
-        return tx.id==id;
+      _userTransaction.removeWhere((tx) {
+        return tx.id == id;
       });
     });
-
   }
+
   void _startModalBottomSheet(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
@@ -108,16 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
+
   @override
   Widget build(BuildContext context) {
-    final appBar=AppBar(
-        title: Text('Expense Tracker'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add, color: Colors.white, size: 30),
-            onPressed: () => _startModalBottomSheet(context),
-          ),
-        ],
+    final appBar = AppBar(
+      title: Text('Expense Tracker'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add, color: Colors.white, size: 30),
+          onPressed: () => _startModalBottomSheet(context),
+        ),
+      ],
     );
     return Scaffold(
       appBar: appBar,
@@ -127,15 +114,17 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: (MediaQuery.of(context).size.height-
-              appBar.preferredSize.height-
-              MediaQuery.of(context).padding.top)*0.3,
-              child: Chart(_recentTransactions)),
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_recentTransactions)),
             Container(
-              height: (MediaQuery.of(context).size.height-
-              appBar.preferredSize.height-
-              MediaQuery.of(context).padding.top)*0.7,
-              child: Transactionist(_userTransaction,_deleteTransaction))
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.7,
+                child: Transactionist(_userTransaction, _deleteTransaction))
           ],
         ),
       ),
