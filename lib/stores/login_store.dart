@@ -95,7 +95,7 @@ abstract class LoginStoreBase with Store {
   }
 
   @action
-  Future<void> validateotpAndLogin(BuildContext context, String smsCode) async {
+  Future<void> validateOtpAndLogin(BuildContext context, String smsCode) async {
     isOtpLoading = true;
     final AuthCredential _authcredential = PhoneAuthProvider.getCredential(
         verificationId: actualCode, smsCode: smsCode);
@@ -126,7 +126,7 @@ abstract class LoginStoreBase with Store {
     firebaseUser = result.user;
 
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => MyApp()),
+        MaterialPageRoute(builder: (_) => MyHomePage()),
         (Route<dynamic> route) => false);
 
     isLoginLoading = false;
