@@ -2,10 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import '../models/transaction.dart';
 import '../widgets/loader_hud.dart';
 import '../stores/login_store.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import '../theme.dart';
 
 class LoginPage extends StatefulWidget {

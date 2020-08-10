@@ -1,10 +1,9 @@
-import 'package:expense_tracker/stores/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../pages/login_page.dart';
-import 'package:expense_tracker/theme.dart';
-import '../stores/login_store.dart';
 import 'package:expense_tracker/main.dart';
+import '../pages/login_page.dart';
+import '../stores/login_store.dart';
+import 'package:expense_tracker/theme.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key key}) : super(key: key);
@@ -21,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
         .then((result) {
       if (result) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => MyHomePage()),
+            MaterialPageRoute(builder: (_) => const MyHomePage()),
             (Route<dynamic> route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
