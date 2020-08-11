@@ -25,6 +25,7 @@ dependencies:
 
   firebase_core: ^0.4.4+3
   firebase_auth: ^0.15.5+3
+  cloud_firestore: ^0.13.4+2
 
   mobx: ^1.1.1
   flutter_mobx: ^1.1.0

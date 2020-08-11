@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/pages/splash_page.dart';
 import 'package:expense_tracker/stores/login_store.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
@@ -77,9 +78,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransaction = [];
+  final firestoreInstance = Firestore.instance;
+  final List<TransactionModel> _userTransaction = [];
 
-  List<Transaction> get _recentTransactions {
+  List<TransactionModel> get _recentTransactions {
     return _userTransaction.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(
         Duration(days: 7),
@@ -96,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addNewTransaction(
       String txTitle, double txAmount, DateTime chosenDate) {
-    final newTx = Transaction(
+    final newTx = TransactionModel(
       title: txTitle,
       amount: txAmount,
       date: chosenDate,
