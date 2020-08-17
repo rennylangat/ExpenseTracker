@@ -19,7 +19,6 @@ class Transactionist extends StatelessWidget {
       String uId;
       user = await FirebaseAuth.instance.currentUser();
       uId = user.uid.toString();
-      print(uId);
     }
 
     return transactions.isEmpty

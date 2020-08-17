@@ -1,14 +1,20 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/pages/splash_page.dart';
 import 'package:expense_tracker/stores/login_store.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_my_app/rate_my_app.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './models/transaction.dart';
 import './widgets/transactions_list.dart';
 import 'package:flutter/material.dart';
 import './widgets/chart.dart';
+
+const String testDevice = 'MobileId';
 
 void main() => runApp(App());
 
@@ -89,6 +95,76 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
+  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    testDevices: testDevice != null ? <String>[testDevice] : null,
+    nonPersonalizedAds: true,
+    keywords: <String>['Game', 'Mario'],
+  );
+
+  BannerAd _bannerAd;
+  InterstitialAd _interstitialAd;
+
+  BannerAd createBannerAd() {
+    return BannerAd(
+        adUnitId: "ca-app-pub-4924437433046489/8477446233",
+        size: AdSize.banner,
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.loaded) {
+            _bannerAd.show();
+          }
+        });
+  }
+
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+        adUnitId: "ca-app-pub-4924437433046489/9181520795",
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.failedToLoad) {
+            _interstitialAd..load();
+          } else if (event == MobileAdEvent.closed) {
+            _interstitialAd = createInterstitialAd()..load();
+          }
+        });
+  }
+
+  void showInterstitialAd() {
+    _interstitialAd..show();
+  }
+
+  void showRandomInterstitialAd() {
+    Random r = new Random();
+    bool value = r.nextBool();
+    if (value == true) {
+      _interstitialAd..show();
+    }
+  }
+
+  @override
+  void initState() {
+    Firestore.instance.settings(persistenceEnabled: true);
+
+    FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-4924437433046489/8477446233");
+    _bannerAd = createBannerAd()
+      ..load()
+      ..show();
+    FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-4924437433046489/9181520795");
+    _interstitialAd = createInterstitialAd()
+      ..load()
+      ..show();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    _interstitialAd.dispose();
+    super.dispose();
+  }
+
   RateMyApp _rateMyApp = RateMyApp(
       preferencesPrefix: 'rateMyApp_pro',
       minDays: 1,
@@ -131,15 +207,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    createBannerAd();
+    createInterstitialAd();
     final appBar = AppBar(
       title: Text('Expense Tracker'),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.add, color: Colors.white, size: 30),
-          onPressed: () => _startModalBottomSheet(context),
+          onPressed: () {
+            createInterstitialAd();
+            _startModalBottomSheet(context);
+          },
         ),
       ],
     );
+    _launchURL() async {
+      const url = 'https://appgallery5.huawei.com/#/app/C102647899';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Cannot launch gallery store';
+      }
+    }
+
     _rateMyApp.init().then((_) {
       if (_rateMyApp.shouldOpenDialog) {
         //checking if the user has rated the app
@@ -156,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       (stars == null ? '0' : stars.round().toString()) +
                       'star(s) !');
                   if (stars != null && (stars == 4 || stars == 5)) {
-                    //Redirect the user to use the app store to enter their reviews
+                    _launchURL();
                   } else {
                     //Redirect to feedback page to tell us how to make the app better
                   }
@@ -180,6 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }
     });
+
     return Consumer<LoginStore>(builder: (_, loginStore, __) {
       return Scaffold(
         appBar: appBar,
@@ -204,9 +295,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => _startModalBottomSheet(context),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 25),
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              _startModalBottomSheet(context);
+              createInterstitialAd();
+            },
+          ),
         ),
       );
     });

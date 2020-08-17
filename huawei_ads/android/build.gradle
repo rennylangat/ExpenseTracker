@@ -1,0 +1,43 @@
+group 'com.huawei.hms.flutter.ads'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://developer.huawei.com/repo/' }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://developer.huawei.com/repo/' }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 23
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation 'com.huawei.hms:ads-lite:13.4.29.301'
+    implementation 'com.huawei.hms:ads-consent:3.4.28.305'
+    implementation 'com.huawei.hms:ads-identifier:3.4.28.313'
+    implementation 'com.huawei.hms:ads-installreferrer:3.4.28.313'
+}
